@@ -1,7 +1,11 @@
-theme: minima
-#title: Octocat's homepage
-#description: Bookmark this to keep an eye on my project updates!
+#theme option
+theme: hacker
 
+#are these even necessary?
+title: your site
+description: description
+
+#where we add pages
 header_pages:
   -index.md
   -about.md

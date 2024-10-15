@@ -1,8 +1,3 @@
 # ymnpy.github.io
 
-yo guys what is up
-
-hacker ???
-
-
-okay okay okay
+I share some of my ideas; raw, un-sized, preliminary ones so to speak.

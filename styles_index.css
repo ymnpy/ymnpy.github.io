@@ -1,0 +1,65 @@
+body {
+    font-family: 'Source Code Pro', monospace;
+    background-image: url(https://global.discourse-cdn.com/mcneel/uploads/default/original/4X/1/0/5/1057de84afb011463edd2648dd4df212750a0db3.jpeg);
+    background-size: cover; /* Stretch image to cover the whole screen */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    position: relative;
+    overflow: hidden; /* Prevent scrolling if background overflows */
+}
+
+.overlay {
+    position: fixed; /* Cover the entire viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8); /* Adjust opacity for a smooth dim effect */
+    pointer-events: none; /* Prevent overlay from interfering with content */
+    z-index: -1; /* this is the trick, send to back kind of thing */
+}
+
+
+h1,h2,h3,h4 {
+    font-family: 'Source Code Pro', monospace;
+    color: #00ff00;
+    margin-left:2%;
+    margin-right:2%;
+    font-size: 28px;
+    padding-bottom:0px;
+}
+
+a {
+    color:#00ff00;
+    text-decoration: none;
+}
+
+span {
+    font-style: italic;
+    font-size: 16px; /* Adjust this value as needed */
+    color: #999; /* Optional: change color to a lighter shade */ 
+}
+
+ul {
+    text-align: left; /* Centered text */  
+    font-size: 20px;
+    list-style-type: none;
+    margin: 0; ""
+    padding: 0;
+    margin-left:2%;
+    margin-right:2%;
+}
+
+footer {
+    color: #00ff00; /* Green text */
+    text-align: left; /* Centered text */
+    padding: 10px 0; /* Padding for spacing */
+    position: float; /* Fixed position */
+    bottom: 0; /* Positioning at the bottom */
+    left: 10; /* Align to the left */
+    width: 100%; /* Full width */
+    text-decoration: none;
+    font-size: 16px;
+    margin-left:2%;
+    margin-right:2%;
+}

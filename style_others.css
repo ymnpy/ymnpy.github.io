@@ -1,9 +1,23 @@
 body {
     font-family: 'Source Code Pro', monospace;
-    background-color: #121212;
-    color #999;
     margin-left: 2%;
     margin-right: 2%;
+    background-image: url(bg2.png);
+    background-size: cover; /* Stretch image to cover the whole screen */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    position: relative;
+    padding-bottom: 50px;
+}
+
+.overlay {
+    position: fixed; /* Cover the entire viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85); /* Adjust opacity for a smooth dim effect */
+    pointer-events: none; /* Prevent overlay from interfering with content */
+    z-index: -1; /* this is the trick, send to back kind of thing */
 }
 
 h1 {
@@ -31,13 +45,48 @@ span {
     color: #999; /* Optional: change color to a lighter shade */
 }
 
-.go_back{
+.go_back {
     color: #999;
     font-size: 16px;
+    text-align: left;
+    padding-left: 2px;
+    padding-bottom: 20px;
+    position: absolute; /* Position it at the bottom of the page */
+    bottom: 0;
+    width: 100%; /* Full width */
+    box-sizing: border-box;
 }
 
 .content {
     max-width: 90%; /* Sets the maximum width to 50% of the page */
     text-align: left; /* Centers the content horizontally */
     padding: 0px; /* Optional: Adds some padding around the text */
+}
+
+/*--progress bar container--*/
+.progress-container {
+    width: 20%;
+    height: 10px;
+    background-color: #ddd; /* Background color of the container */
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+/*--progress bar style--*/
+.progress-bar {
+    height: 100%;
+    width: 0%; /* Initial width of the progress bar */
+    background-color: #00ff00; /* Starting color */
+    animation: fill 10s forwards; /* Apply the animation */
+    border-radius: 5px;
+}
+
+/*--progress bar animation--*/
+@keyframes fill {
+    from {
+        width: 0;
+    }
+    to {
+        width: 60%; /* Final width */
+    }
 }

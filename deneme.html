@@ -41,10 +41,10 @@
             var contour = document.getElementById("contour").value;
             document.getElementById("result").innerText=part + " " + contour;
 
-            if (part=="Frame 300") {
-                document.getElementById("imaj").style.filter = "hue-rotate(90deg)";
-            } else if (part=="Frame 210") {
-                document.getElementById("imaj").style.filter = "hue-rotate(180deg)";
+            if (contour=="Stress") {
+                document.getElementById("imaj").style.filter = "hue-rotate(45deg)";
+            } else if (contour=="Displacement") {
+                document.getElementById("imaj").style.filter = "hue-rotate(225deg)";
             } else {
                 document.getElementById("imaj").style.filter = "none";
             }

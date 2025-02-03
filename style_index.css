@@ -6,6 +6,7 @@ body {
     background-position: center center; /* Center the image */
     background-repeat: no-repeat; /* Prevent image repetition */
     position: relative;
+    background-attachment: fixed;
 
 }
 
@@ -55,12 +56,13 @@ footer {
     text-align: left; /* Left-aligned text (not centered as mentioned) */
     padding-left: 20px;
     padding-top: 12px;
-    position: floating; /* Fix the position at the bottom */
-    bottom: 0; /* Positioning at the bottom */
     width: 100%; /* Full width */
     text-decoration: none;
     font-size: 16px;
     box-sizing: border-box;  /* Ensure padding is included within the element's width */
+    bottom: 20px; /* Positioning at the bottom */
+    position: fixed; /* Fix the position at the bottom */
+    
 }
 
 .fade-out-line {
@@ -69,6 +71,16 @@ footer {
     background: linear-gradient(to right, rgba(0, 205, 0, 1) 0%, rgba(0, 255, 0, 0) 75%);
     height: 2px;  /* Set the height to match the border thickness */
 }
+
+.fade-out-line-bot {
+    border: none;
+    width: 100%;
+    background: linear-gradient(to right, rgba(0, 205, 0, 1) 0%, rgba(0, 255, 0, 0) 75%);
+    height: 2px;  /* Set the height to match the border thickness */
+    bottom: 50px;
+    position: fixed;
+}
+
 
 
 

@@ -61,7 +61,7 @@ footer {
     font-size: 16px;
     box-sizing: border-box;  /* Ensure padding is included within the element's width */
     bottom: 20px; /* Positioning at the bottom */
-    position: fixed; /* Fix the position at the bottom */
+    position: floating; /* Fix the position at the bottom */
     
 }
 
@@ -78,7 +78,7 @@ footer {
     background: linear-gradient(to right, rgba(0, 205, 0, 1) 0%, rgba(0, 255, 0, 0) 75%);
     height: 2px;  /* Set the height to match the border thickness */
     bottom: 50px;
-    position: fixed;
+    position: floating;
 }
 
 

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
+    
+    <title>five quotes from Marcus Aurelius</title>
+    <link rel="shortcut icon" type="image/png" href="favicon1.png">
+    <link rel="stylesheet" href="style_others.css">
+</head>
+
+<body>
+    <br><span>February 3, 2025</span>
+    <div class="overlay"></div>
+    <h1>Check this out Ömer</h1>
+
+    <label for="part" style="color:white;">Part:</label>
+    <select id="part" style="margin-right:20px;">
+        <option value="Frame 200">Frame 200</option>
+        <option value="Frame 210">Frame 210</option>
+        <option value="Frame 300">Frame 300</option>
+    </select>
+    
+    <label for="contour" style="color:white">Look for:</label>
+    <select id="contour">
+        <option value="Displacement">Displacement</option>
+        <option value="Stress">Stress</option>
+        <option value="RF values">RF values</option>
+    </select>
+
+    <br><br><br>
+    <div id="result" style="color:red;"></div> <!--placeholder-->
+    <br>
+
+    <img id="imaj" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdBWB76EZKUgHdARYa-XNyIzoiJiUiyKiFrg&s">
+
+    <script>
+        function get_stuff() {
+            var part = document.getElementById("part").value;
+            var contour = document.getElementById("contour").value;
+            document.getElementById("result").innerText=part + " " + contour;
+
+            if (part=="Frame 300") {
+                document.getElementById("imaj").style.filter = "hue-rotate(90deg)";
+            } else if (part=="Frame 210") {
+                document.getElementById("imaj").style.filter = "hue-rotate(180deg)";
+            } else {
+                document.getElementById("imaj").style.filter = "none";
+            }
+
+        }
+    
+        document.getElementById("part").addEventListener("change", get_stuff);
+        document.getElementById("contour").addEventListener("change", get_stuff);
+    
+        get_stuff(); // initial trigger
+    </script>
+
+    <br><br><br>
+    <a class="go_back", href="index.html">Go back</a>
+</body>
+</html>

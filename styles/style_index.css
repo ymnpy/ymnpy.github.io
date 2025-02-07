@@ -1,7 +1,7 @@
 
 body {
     font-family: 'Source Code Pro', monospace;
-    background-image: url(../images/bg1.png);
+    background-image: url("../images/bg1.png");
     background-size: cover; /* Stretch image to cover the whole screen */
     background-position: center center; /* Center the image */
     background-repeat: no-repeat; /* Prevent image repetition */

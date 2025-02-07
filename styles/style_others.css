@@ -2,7 +2,7 @@ body {
     font-family: 'Source Code Pro', monospace;
     margin-left: 2%;
     margin-right: 2%;
-    background-image: url(bg2.png);
+    background-image: url("../images/bg2.png");
     background-repeat: no-repeat; /* Prevent image repetition */
     position: relative;
     background-attachment: fixed; 

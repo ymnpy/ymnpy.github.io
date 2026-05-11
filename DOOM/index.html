@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DOOM</title>
+  <style>
+    @font-face {
+      font-family: "VT323";
+      font-style: normal;
+      font-weight: 400;
+      src: url(https://fonts.gstatic.com/s/vt323/v12/pxiKyp0ihIEF2isfFJXUdVNF.woff2) format("woff2");
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0e0e0e;
+      font-family: "VT323", monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem 3rem;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 56px;
+      letter-spacing: 12px;
+      color: #cc0000;
+      text-shadow: 0 0 24px #cc000077;
+    }
+
+    .sub {
+      font-size: 18px;
+      color: #444;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    #launch-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+
+    .btn {
+      padding: 12px 32px;
+      font-family: "VT323", monospace;
+      font-size: 22px;
+      letter-spacing: 3px;
+      background: #cc0000;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn:hover { background: #ee1111; }
+    .btn:active { transform: scale(0.97); }
+
+    .hint {
+      font-size: 15px;
+      color: #333;
+      text-align: center;
+      max-width: 640px;
+      line-height: 1.8;
+    }
+    .hint b { color: #555; }
+
+    /* Game area — hidden until launch */
+    #game-wrap {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    #status {
+      font-size: 16px;
+      color: #555;
+      min-height: 20px;
+      text-align: center;
+    }
+
+    /* Canvas must have NO border or padding — mouse coords break otherwise */
+    canvas#canvas {
+      background: #000;
+      display: block;
+      width: 800px;
+      height: 600px;
+      max-width: 100%;
+    }
+
+    .controls {
+      font-size: 15px;
+      color: #333;
+      text-align: center;
+      line-height: 1.9;
+    }
+    .controls b { color: #555; }
+
+    footer {
+      font-size: 13px;
+      color: #222;
+      text-align: center;
+      max-width: 640px;
+      line-height: 1.8;
+      margin-top: 1rem;
+    }
+    footer a { color: #333; }
+  </style>
+</head>
+<body>
+
+  <h1>DOOM</h1>
+  <p class="sub">shareware · webassembly · chocolate doom</p>
+
+  <!-- Pre-launch screen -->
+  <div id="launch-wrap">
+    <p class="hint">
+      <b>Solo play only</b> — fully self-hosted, all files served from this domain.<br>
+      Click Play and wait ~5 seconds for the game to load.
+    </p>
+    <button class="btn" onclick="launch()">&#9654; PLAY NOW</button>
+    <p class="hint">
+      <b>Controls:</b>
+      Arrow keys = move &amp; turn &nbsp;|&nbsp;
+      Ctrl = shoot &nbsp;|&nbsp;
+      Space = open doors &nbsp;|&nbsp;
+      Alt = strafe &nbsp;|&nbsp;
+      F = fullscreen &nbsp;|&nbsp;
+      Esc = menu
+    </p>
+  </div>
+
+  <!-- Game screen — shown after launch -->
+  <div id="game-wrap">
+    <div id="status">Loading DOOM...</div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    <div class="controls">
+      <b>Move:</b> ↑↓←→ &nbsp;|&nbsp;
+      <b>Shoot:</b> Ctrl &nbsp;|&nbsp;
+      <b>Open:</b> Space &nbsp;|&nbsp;
+      <b>Strafe:</b> Alt+← / → &nbsp;|&nbsp;
+      <b>Fullscreen:</b> F &nbsp;|&nbsp;
+      <b>Menu:</b> Esc
+    </div>
+  </div>
+
+  <footer>
+    DOOM&reg; is a registered trademark of ZeniMax Media Inc.
+    &mdash; Running <a href="https://github.com/cloudflare/doom-wasm" target="_blank" rel="noopener">cloudflare/doom-wasm</a>
+    (Chocolate Doom + Emscripten, GPL).
+    Not affiliated with ZeniMax Media Inc. or id Software LLC.
+  </footer>
+
+  <script>
+    var launched = false;
+
+    function launch() {
+      if (launched) return;
+      launched = true;
+
+      document.getElementById('launch-wrap').style.display = 'none';
+      document.getElementById('game-wrap').style.display = 'flex';
+
+      // Configure the Emscripten Module BEFORE loading the script
+      window.Module = {
+        noInitialRun: true,
+
+        onRuntimeInitialized: function () {
+          setStatus('Starting game...');
+          callMain([
+            '-iwad', 'doom1.wad',
+            '-window',
+            '-nogui',
+            '-nomusic',
+            '-config', 'default.cfg',
+            '-servername', 'doomflare'
+          ]);
+        },
+
+        preRun: function () {
+          Module.FS.createPreloadedFile('', 'doom1.wad', 'doom1.wad', true, true);
+          Module.FS.createPreloadedFile('', 'default.cfg', 'default.cfg', true, true);
+        },
+
+        canvas: (function () {
+          var canvas = document.getElementById('canvas');
+          canvas.addEventListener('webglcontextlost', function (e) {
+            alert('WebGL context lost. Please reload the page.');
+            e.preventDefault();
+          }, false);
+          return canvas;
+        })(),
+
+        print: function (text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          // Parse doom status messages
+          if (text.startsWith('doom: 10')) setStatus('');
+          else if (text.startsWith('doom: 2'))  setStatus('Connected!');
+          else if (text.startsWith('doom: 1'))  setStatus('Could not connect to server.');
+          console.log(text);
+        },
+
+        printErr: function (text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          console.error(text);
+        },
+
+        setStatus: function (text) {
+          setStatus(text);
+          console.log(text);
+        },
+
+        totalDependencies: 0,
+        monitorRunDependencies: function (left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          if (left) {
+            setStatus('Loading... (' + (this.totalDependencies - left) + ' / ' + this.totalDependencies + ')');
+          } else {
+            setStatus('Loaded! Starting...');
+          }
+        }
+      };
+
+      window.onerror = function () {
+        setStatus('Error — check browser console (F12).');
+      };
+
+      // Now load the compiled WASM+JS bundle
+      var s = document.createElement('script');
+      s.src = 'websockets-doom.js';
+      s.onerror = function () {
+        setStatus('ERROR: websockets-doom.js not found. See setup instructions.');
+      };
+      document.body.appendChild(s);
+    }
+
+    function setStatus(text) {
+      var el = document.getElementById('status');
+      if (el) el.textContent = text;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lug-Clevis Calculator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Courier New', monospace;
+    background: #1a1d23;
+    color: #c9d1d9;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  h1 {
+    font-size: 14px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: #8b949e;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 0.5px solid #30363d;
+  }
+  .wrap {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    max-width: 900px;
+  }
+  .panel { display: flex; flex-direction: column; gap: 14px; }
+  .section {
+    background: #161b22;
+    border: 0.5px solid #30363d;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .section-title {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #8b949e;
+    font-weight: 500;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 0.5px solid #30363d;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 90px;
+    align-items: center;
+    margin-bottom: 5px;
+    gap: 6px;
+  }
+  .row label { font-size: 12px; color: #8b949e; }
+  .row input, .row select {
+    width: 100%;
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 0.5px solid #30363d;
+    border-radius: 4px;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+    text-align: right;
+  }
+  .row input:focus, .row select:focus {
+    outline: none;
+    border-color: #58a6ff;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .rf-card {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 0.5px solid #30363d;
+    background: #0d1117;
+  }
+  .rf-label {
+    font-size: 10px;
+    color: #8b949e;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .rf-value { font-size: 24px; font-weight: 500; font-family: 'Courier New', monospace; }
+  .rf-sub { font-size: 10px; color: #8b949e; margin-top: 2px; }
+  .pass { color: #3fb950; }
+  .warn { color: #d29922; }
+  .fail { color: #f85149; }
+
+  .viz { display: flex; flex-direction: column; gap: 14px; }
+  .viz-title {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #8b949e;
+  }
+  svg.diagram {
+    width: 100%;
+    border-radius: 8px;
+    border: 0.5px solid #30363d;
+    background: #161b22;
+  }
+  .breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .bk-item {
+    background: #161b22;
+    border-radius: 6px;
+    border: 0.5px solid #30363d;
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  .bk-name { color: #8b949e; margin-bottom: 2px; }
+  .bk-val { font-family: 'Courier New', monospace; font-weight: 500; font-size: 13px; color: #c9d1d9; }
+</style>
+</head>
+<body>
+
+<h1>Lug &amp; Clevis — Structural Analysis</h1>
+
+<div class="wrap">
+  <!-- LEFT PANEL: INPUTS -->
+  <div class="panel">
+
+    <div class="section">
+      <div class="section-title">Lug</div>
+      <div class="row"><label>Hole D1</label><input type="number" id="D1" value="10" step="0.5"></div>
+      <div class="row"><label>Radius R</label><input type="number" id="R" value="10" step="0.5"></div>
+      <div class="row"><label>Thickness t</label><input type="number" id="t" value="5" step="0.5"></div>
+      <div class="row"><label>Ftu lug</label><input type="number" id="FtuLug" value="900" step="10"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Pin</div>
+      <div class="row"><label>Diameter D2</label><input type="number" id="D2" value="8" step="0.5"></div>
+      <div class="row"><label>Gap g</label><input type="number" id="gap" value="2" step="0.1"></div>
+      <div class="row"><label>Ftu pin</label><input type="number" id="FtuPin" value="900" step="10"></div>
+      <div class="row"><label>Fsu pin</label><input type="number" id="FsuPin" value="450" step="10"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Loads</div>
+      <div class="row"><label>Faxial</label><input type="number" id="Fax" value="3000" step="100"></div>
+      <div class="row"><label>Ftransverse</label><input type="number" id="Ftr" value="6000" step="100"></div>
+      <div class="row"><label>Fhinge</label><input type="number" id="Fhinge" value="1000" step="100"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Factors</div>
+      <div class="row"><label>Fitting ff</label><input type="number" id="ff" value="1.15" step="0.05"></div>
+      <div class="row"><label>Additive fa</label><input type="number" id="fa" value="1" step="0.05"></div>
+      <div class="row"><label>Ultimate fu</label><input type="number" id="fu" value="1.25" step="0.05"></div>
+      <div class="row"><label>Shear cond.</label>
+        <select id="dls">
+          <option value="2">DLS</option>
+          <option value="1">SLS</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Results</div>
+      <div class="results-grid">
+        <div class="rf-card">
+          <div class="rf-label">RF pin</div>
+          <div class="rf-value" id="rfPin">—</div>
+          <div class="rf-sub" id="rfPinSub"></div>
+        </div>
+        <div class="rf-card">
+          <div class="rf-label">RF lug</div>
+          <div class="rf-value" id="rfLug">—</div>
+          <div class="rf-sub" id="rfLugSub"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel -->
+
+  <!-- RIGHT: VISUAL + BREAKDOWN -->
+  <div class="viz">
+    <div class="viz-title">Geometry</div>
+    <svg class="diagram" id="lugSvg" viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="viz-title">Breakdown</div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+</div>
+
+<script>
+const PI = Math.PI;
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function s(id) { return parseInt(document.getElementById(id).value) || 2; }
+
+function calc() {
+  const D1 = v('D1'), R = v('R'), t = v('t'), FtuLug = v('FtuLug');
+  const D2 = v('D2'), gap = v('gap'), FtuPin = v('FtuPin'), FsuPin = v('FsuPin');
+  const Fax = v('Fax'), Ftr = v('Ftr'), Fhinge = v('Fhinge');
+  const ff = v('ff'), fa = v('fa'), fu = v('fu');
+  const dls = s('dls');
+
+  // Factored loads
+  const P_ax = Fax * ff * fa * fu;
+  const P_tr = Ftr * ff * fa * fu;
+  const P_mag = Math.sqrt(P_ax ** 2 + P_tr ** 2);
+  const clevis_t = t * 0.6; // assumption per NIU
+
+  // --- LUG NET TENSION (NIU fig 9.8.6) ---
+  let kt_nt = -0.5 * (R * 2 / D1) / 3 + 3.5 / 3;
+  if (kt_nt <= 0.5) kt_nt = 0.5;
+  if (kt_nt > 1)    kt_nt = 1;
+  const allow_nt = kt_nt * FtuLug * (R * 2 - D1) * t;
+
+  // --- LUG BEARING (NIU 9.8.5) ---
+  const allow_br = 0.8 * FtuLug * (D1 * t);
+
+  const minLugAxial = Math.min(allow_nt, allow_br);
+  const RF_lug_ax = P_ax > 0 ? minLugAxial / P_ax : 9999;
+
+  // --- TRANSVERSE BEARING (NIU 9.8.12) ---
+  const allow_br_tr = 0.7 * (D1 * t) * FtuLug;
+  const RF_lug_tr = P_tr > 0 ? allow_br_tr / P_tr : 9999;
+
+  // --- COMBINED LUG (oblique interaction, NIU example 3) ---
+  const RF_lug_comb = 1 / ((1 / Math.max(RF_lug_ax, 0.001)) ** 1.6 + (1 / Math.max(RF_lug_tr, 0.001)) ** 1.6) ** 0.625;
+
+  // --- ROOT BENDING ---
+  const ax_stress = P_ax / (t * R * 2);
+  const bend_stress_root = (Fhinge * t / 2) / ((t ** 3 * R * 2) / 12);
+  const RF_root = (bend_stress_root + ax_stress * 1.6) > 0
+    ? FtuLug / (bend_stress_root + ax_stress * 1.6)
+    : 9999;
+
+  // --- PIN SHEAR ---
+  const bolt_shear_allow = FsuPin * PI * D2 ** 2 / 4;
+  const RF_bolt_shear = bolt_shear_allow / (P_mag / dls);
+
+  // --- PIN BENDING ---
+  const b = t / 4 + clevis_t / 2 + gap;
+  const moment = (P_mag / dls) * b;
+  const bend_pin = (moment * D2 / 2) / (PI * D2 ** 4 / 64);
+  const axial_pin = Fhinge / (PI * D2 ** 2 / 4);
+  const RF_bolt_bend = (bend_pin + axial_pin) > 0
+    ? FtuPin / (bend_pin + axial_pin)
+    : 9999;
+
+  // --- GOVERNING RFs ---
+  const RF_pin = Math.min(RF_bolt_shear, RF_bolt_bend);
+  const RF_lug = Math.min(RF_lug_comb, RF_root);
+
+  function fmt(val) { return isFinite(val) && val < 9990 ? val.toFixed(3) : '∞'; }
+  function colorClass(val) { return val >= 1.5 ? 'pass' : val >= 1.0 ? 'warn' : 'fail'; }
+
+  // Update RF cards
+  const rfPinEl = document.getElementById('rfPin');
+  rfPinEl.textContent = fmt(RF_pin);
+  rfPinEl.className = 'rf-value ' + colorClass(RF_pin);
+  document.getElementById('rfPinSub').textContent =
+    RF_bolt_shear < RF_bolt_bend ? 'governed by shear' : 'governed by bending';
+
+  const rfLugEl = document.getElementById('rfLug');
+  rfLugEl.textContent = fmt(RF_lug);
+  rfLugEl.className = 'rf-value ' + colorClass(RF_lug);
+  document.getElementById('rfLugSub').textContent =
+    RF_lug_comb < RF_root ? 'governed by bearing' : 'governed by root bend';
+
+  // Breakdown table
+  const bk = [
+    { n: 'Net tension RF',         v: fmt(RF_lug_ax) },
+    { n: 'Transverse bearing RF',  v: fmt(RF_lug_tr) },
+    { n: 'Combined lug RF',        v: fmt(RF_lug_comb) },
+    { n: 'Root bending RF',        v: fmt(RF_root) },
+    { n: 'Pin shear RF',           v: fmt(RF_bolt_shear) },
+    { n: 'Pin bending RF',         v: fmt(RF_bolt_bend) },
+    { n: 'P_axial factored',       v: P_ax.toFixed(0) },
+    { n: 'P_transverse factored',  v: P_tr.toFixed(0) },
+  ];
+  document.getElementById('breakdown').innerHTML = bk.map(b =>
+    `<div class="bk-item"><div class="bk-name">${b.n}</div><div class="bk-val">${b.v}</div></div>`
+  ).join('');
+
+  drawSvg(D1, R, t, D2, RF_pin, RF_lug);
+}
+
+function drawSvg(D1, R, t, D2, rfPin, rfLug) {
+  const svg = document.getElementById('lugSvg');
+  const cx = 120, cy = 120;
+  const scale = Math.min(50 / R, 7);
+  const sr  = R  * scale;
+  const sd1 = D1 * scale * 0.5;
+  const sd2 = D2 * scale * 0.5;
+
+  const lugW = sr * 1.4;
+  const lugH = sr * 2;
+
+  const pinColor = rfPin >= 1.5 ? '#3fb950' : rfPin >= 1.0 ? '#d29922' : '#f85149';
+  const lugColor = rfLug >= 1.5 ? '#3fb950' : rfLug >= 1.0 ? '#d29922' : '#f85149';
+
+  function fmtRF(v) { return isFinite(v) && v < 9990 ? v.toFixed(3) : '∞'; }
+
+  svg.innerHTML = `
+  <defs>
+    <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#f85149"/>
+    </marker>
+    <marker id="arrg" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <!-- lug body rect -->
+  <rect x="${cx - lugW / 2}" y="${cy - lugH / 2 + sd1}"
+        width="${lugW}" height="${lugH - sd1}"
+        rx="3" fill="#1f4f8f" stroke="#2d5fa3" stroke-width="0.5"/>
+
+  <!-- lug head ellipse -->
+  <ellipse cx="${cx}" cy="${cy}" rx="${sr}" ry="${sr}"
+           fill="#1f4f8f" stroke="#2d5fa3" stroke-width="0.5"/>
+
+  <!-- hole -->
+  <circle cx="${cx}" cy="${cy}" r="${sd1}"
+          fill="#161b22" stroke="#30363d" stroke-width="1"/>
+
+  <!-- clevis cheek plates -->
+  <rect x="${cx - sd2 * 3}" y="${cy - sd1 * 0.85}"
+        width="${sd2 * 0.8}" height="${sd1 * 1.7}"
+        rx="2" fill="#444c56" stroke="#30363d" stroke-width="0.5"/>
+  <rect x="${cx + sd2 * 2.2}" y="${cy - sd1 * 0.85}"
+        width="${sd2 * 0.8}" height="${sd1 * 1.7}"
+        rx="2" fill="#444c56" stroke="#30363d" stroke-width="0.5"/>
+
+  <!-- pin -->
+  <line x1="${cx - sd2 * 3.2}" y1="${cy}" x2="${cx + sd2 * 3.2}" y2="${cy}"
+        stroke="${pinColor}" stroke-width="${sd2 * 2}" stroke-linecap="round" opacity="0.85"/>
+  <circle cx="${cx}" cy="${cy}" r="${sd2}"
+          fill="${pinColor}" opacity="0.95"/>
+
+  <!-- load arrow: Faxial -->
+  <line x1="${cx + sr + 28}" y1="${cy}" x2="${cx + sr + 6}" y2="${cy}"
+        stroke="#f85149" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="${cx + sr + 32}" y="${cy + 4}"
+        font-size="9" fill="#f85149" font-family="Courier New">Fax</text>
+
+  <!-- load arrow: Ftransverse -->
+  <line x1="${cx}" y1="${cy + sr + 26}" x2="${cx}" y2="${cy + sr + 6}"
+        stroke="#f85149" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="${cx + 4}" y="${cy + sr + 36}"
+        font-size="9" fill="#f85149" font-family="Courier New">Ftr</text>
+
+  <!-- dim: D1 -->
+  <line x1="${cx - sd1}" y1="${cy + sr + 46}" x2="${cx + sd1}" y2="${cy + sr + 46}"
+        stroke="#8b949e" stroke-width="0.5" marker-end="url(#arrg)"/>
+  <text x="${cx}" y="${cy + sr + 56}" text-anchor="middle"
+        font-size="9" fill="#8b949e" font-family="Courier New">D1=${D1}</text>
+
+  <!-- dim: R -->
+  <line x1="${cx}" y1="${cy}" x2="${cx + sr}" y2="${cy}"
+        stroke="#8b949e" stroke-width="0.5" stroke-dasharray="2,2"/>
+  <text x="${cx + sr / 2}" y="${cy - 5}" text-anchor="middle"
+        font-size="9" fill="#8b949e" font-family="Courier New">R=${R}</text>
+
+  <!-- RF summary box -->
+  <rect x="242" y="14" width="106" height="76"
+        rx="6" fill="#0d1117" stroke="#30363d" stroke-width="0.5"/>
+  <text x="295" y="30" text-anchor="middle"
+        font-size="8" fill="#8b949e" font-family="Courier New" letter-spacing="1">RESERVE FACTORS</text>
+  <line x1="248" y1="34" x2="342" y2="34" stroke="#30363d" stroke-width="0.5"/>
+
+  <text x="252" y="52" font-size="10" fill="#8b949e" font-family="Courier New">RF pin</text>
+  <text x="344" y="52" text-anchor="end"
+        font-size="14" font-weight="bold" fill="${pinColor}" font-family="Courier New">${fmtRF(rfPin)}</text>
+
+  <text x="252" y="72" font-size="10" fill="#8b949e" font-family="Courier New">RF lug</text>
+  <text x="344" y="72" text-anchor="end"
+        font-size="14" font-weight="bold" fill="${lugColor}" font-family="Courier New">${fmtRF(rfLug)}</text>
+
+  <!-- legend -->
+  <circle cx="250" cy="108" r="4" fill="#3fb950"/>
+  <text x="258" y="112" font-size="9" fill="#8b949e" font-family="Courier New">RF ≥ 1.5  PASS</text>
+  <circle cx="250" cy="122" r="4" fill="#d29922"/>
+  <text x="258" y="126" font-size="9" fill="#8b949e" font-family="Courier New">1.0 ≤ RF &lt; 1.5</text>
+  <circle cx="250" cy="136" r="4" fill="#f85149"/>
+  <text x="258" y="140" font-size="9" fill="#8b949e" font-family="Courier New">RF &lt; 1.0  FAIL</text>
+  `;
+}
+
+document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>

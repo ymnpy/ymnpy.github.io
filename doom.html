@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOOM — Play with Friends</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0e0e0e;
+      color: #bbb;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 3rem;
+      gap: 1.2rem;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 52px;
+      letter-spacing: 12px;
+      color: #cc0000;
+      text-shadow: 0 0 24px #cc000099;
+      font-weight: bold;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #555;
+      letter-spacing: 1px;
+    }
+
+    /* --- buttons row --- */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 11px 28px;
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, transform 0.1s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary { background: #cc0000; color: #fff; }
+    .btn-primary:hover { background: #ee1111; }
+
+    .btn-secondary { background: #222; color: #aaa; border: 1px solid #333; }
+    .btn-secondary:hover { background: #2a2a2a; color: #ddd; }
+
+    /* --- info strip --- */
+    .info-strip {
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+      max-width: 700px;
+      line-height: 1.8;
+    }
+    .info-strip b { color: #888; }
+    .info-strip a { color: #666; text-decoration: underline; }
+
+    /* --- iframe box --- */
+    #game-wrap {
+      display: none;
+      width: 100%;
+      max-width: 860px;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .game-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #444;
+    }
+
+    .game-header a {
+      color: #555;
+      text-decoration: none;
+      border: 1px solid #2a2a2a;
+      padding: 5px 14px;
+      border-radius: 3px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    .game-header a:hover { color: #aaa; border-color: #444; }
+
+    iframe {
+      width: 100%;
+      height: 620px;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      background: #000;
+    }
+
+    .game-tip {
+      font-size: 11px;
+      color: #333;
+      text-align: center;
+    }
+
+    /* --- footer --- */
+    footer {
+      font-size: 10px;
+      color: #2a2a2a;
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.8;
+      margin-top: 1rem;
+    }
+    footer a { color: #333; }
+  </style>
+</head>
+<body>
+
+  <h1>DOOM</h1>
+  <p class="tagline">co-op &amp; deathmatch · up to 4 players · browser · no install</p>
+
+  <div class="btn-row" id="btn-row">
+    <button class="btn btn-primary" onclick="launch()">&#9654; PLAY NOW</button>
+    <a class="btn btn-secondary"
+       href="https://silentspacemarine.com"
+       target="_blank"
+       rel="noopener">&#8599; OPEN FULL SITE</a>
+  </div>
+
+  <div class="info-strip">
+    <b>How to play with friends:</b>
+    Click <b>Start Multiplayer</b> inside the game → choose <b>Co-op</b> or <b>Deathmatch</b> → copy the room URL → send it to friends.<br>
+    <b>Behind a firewall?</b> Use the <b>Open Full Site</b> button above to launch
+    <a href="https://silentspacemarine.com" target="_blank" rel="noopener">silentspacemarine.com</a>
+    directly in a new tab — bypasses most iframe restrictions.<br>
+    <b>Controls:</b> Arrow keys · Ctrl = shoot · Space = open doors · Alt+Enter = fullscreen · F = fullscreen (in-game)
+  </div>
+
+  <!-- game iframe, shown after clicking Play -->
+  <div id="game-wrap">
+    <div class="game-header">
+      <span>&#128279; share your room URL from inside the game to invite friends</span>
+      <a href="https://silentspacemarine.com" target="_blank" rel="noopener">&#8599; open in new tab</a>
+    </div>
+    <iframe
+      id="doom-frame"
+      allow="autoplay; fullscreen; pointer-lock"
+      allowfullscreen
+      title="Multiplayer DOOM"
+    ></iframe>
+    <p class="game-tip">If the game doesn't load here, use the "open in new tab" link above — some browsers block iframes.</p>
+  </div>
+
+  <footer>
+    DOOM&reg; is a registered trademark of ZeniMax Media Inc. &mdash;
+    Powered by <a href="https://silentspacemarine.com" target="_blank">silentspacemarine.com</a>
+    (<a href="https://blog.cloudflare.com/doom-multiplayer-workers/" target="_blank">Cloudflare Workers + WebSockets</a>) &amp;
+    <a href="https://github.com/cloudflare/doom-wasm" target="_blank">cloudflare/doom-wasm</a> (open source).
+    WebAssembly DOOM is not affiliated with ZeniMax Media Inc. or id Software LLC.
+  </footer>
+
+  <script>
+    function launch() {
+      // swap buttons
+      document.getElementById('btn-row').style.display = 'none';
+      var wrap = document.getElementById('game-wrap');
+      wrap.style.display = 'flex';
+      // load the iframe
+      document.getElementById('doom-frame').src = 'https://silentspacemarine.com';
+    }
+  </script>
+
+</body>
+</html>

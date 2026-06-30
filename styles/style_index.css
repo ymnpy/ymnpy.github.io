@@ -1,1 +1,109 @@
+body {
+    font-family: 'Source Code Pro', monospace;
+    background-color: #08101f; /* Solid dark blue */
+    background-image: url("../images/bg1.png");
+    background-size: cover; /* Stretch image to cover the whole screen */
+    background-position: center center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent image repetition */
+    background-attachment: fixed;
+    position: relative;
+    color: #ffffff; /* Default text color */
+}
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(8, 16, 31, 0.85); /* matches #10245c */
+    pointer-events: none;
+    z-index: -1;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Source Code Pro', monospace;
+    color: #ffffff;
+    padding-left: 20px;
+    font-size: 28px;
+    padding-bottom: 0px;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #aac4ff; /* Light blue hover */
+    text-decoration: underline;
+}
+
+span {
+    font-style: italic;
+    font-size: 14px;
+    color: #8899bb; /* Muted blue-gray, ties into the theme */
+    letter-spacing: 0.5px;
+}
+
+ul {
+    text-align: left;
+    font-size: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+    margin-right: 2%;
+    color: #ffffff;
+}
+
+ul li {
+    margin-bottom: 8px;
+}
+
+footer {
+    color: #ffffff;
+    text-align: left;
+    padding-left: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px; /* gap below the footer */
+    width: 100%;
+    text-decoration: none;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+footer a:hover {
+    color: #aac4ff;
+    text-decoration: underline;
+}
+
+.fade-out-line {
+    border: none;
+    width: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 75%);
+    height: 2px;
+}
+
+.fade-out-line-bot {
+    border: none;
+    width: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 75%);
+    height: 2px;
+}
+
+::selection {
+    background: #aac4ff;
+    color: #08101f;
+}
+
+@media (max-width: 600px) {
+    h1, h2, h3, h4 {
+        font-size: 22px;
+        padding-left: 12px;
+    }
+    ul {
+        font-size: 17px;
+        padding: 0 12px;
+    }
+}

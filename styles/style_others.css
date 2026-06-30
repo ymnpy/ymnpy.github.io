@@ -2,12 +2,14 @@ body {
     font-family: 'Source Code Pro', monospace;
     margin-left: 2%;
     margin-right: 2%;
+    background-color: #08101f; /* Deep midnight blue, fallback/base */
     background-image: url("../images/bg2.png");
     background-repeat: no-repeat; /* Prevent image repetition */
     position: relative;
     background-attachment: fixed; 
     background-size: 100% 100%; /* Stretch image to cover the whole screen */
     padding-bottom: 50px;
+    color: #ffffff; /* Default text color */
 }
 
 .overlay {
@@ -16,38 +18,43 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.85); /* Adjust opacity for a smooth dim effect */
+    background: rgba(8, 16, 31, 0.85); /* matches #08101f */
     pointer-events: none; /* Prevent overlay from interfering with content */
     z-index: -1; /* this is the trick, send to back kind of thing */
 }
 
 h1 {
-    color: #00ff00;
+    color: #ffffff;
     font-size: 20px;
-    margin-top:2px;
-    padding-top:2px;
-    padding-bottom:8px;
+    margin-top: 2px;
+    padding-top: 2px;
+    padding-bottom: 8px;
 }
 
-p,ul,ol,blockquote  {
-    color: #00ff00;
+p, ul, ol, blockquote {
+    color: #ffffff;
     font-size: 16px;
 }
 
 a {
-    color: #00ff00;
+    color: #ffffff;
     font-size: 16px;
     font-weight: bold;
+}
+
+a:hover {
+    color: #aac4ff; /* Light blue hover, consistent with your other page */
+    text-decoration: underline;
 }
 
 span {
     font-style: italic;
     font-size: 16px; /* Adjust this value as needed */
-    color: #999; /* Optional: change color to a lighter shade */
+    color: #8899bb; /* Muted blue-gray instead of plain gray */
 }
 
 .go_back {
-    color: #999;
+    color: #8899bb;
     font-size: 16px;
     text-align: left;
     padding-left: 2px;
@@ -56,6 +63,10 @@ span {
     bottom: 0;
     width: 100%; /* Full width */
     box-sizing: border-box;
+}
+
+.go_back:hover {
+    color: #aac4ff;
 }
 
 .content {
@@ -68,7 +79,7 @@ span {
 .progress-container {
     width: 20%;
     height: 10px;
-    background-color: #ddd; /* Background color of the container */
+    background-color: #1a2a4a; /* Darker blue-gray track instead of light gray */
     border-radius: 2px;
     overflow: hidden;
 }
@@ -77,7 +88,7 @@ span {
 .progress-bar {
     height: 100%;
     width: 0%; /* Initial width of the progress bar */
-    background-color: #00ff00; /* Starting color */
+    background-color: #aac4ff; /* Light blue fill, ties into your hover accent */
     animation: fill 10s forwards; /* Apply the animation */
     border-radius: 5px;
 }
@@ -90,4 +101,9 @@ span {
     to {
         width: 60%; /* Final width */
     }
+}
+
+::selection {
+    background: #aac4ff;
+    color: #08101f;
 }
